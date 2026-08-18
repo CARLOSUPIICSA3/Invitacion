@@ -6,73 +6,76 @@ import bgImage from '../assets/background.png';
 import lastFrame from '../assets/salida.png';
 import parroquiaImg from '../assets/parroquia.png';
 import bgMusic from '../assets/musica.mp3';
+import posada1 from '../assets/posada 1.png';
+import posada2 from '../assets/posada 2.png';
+import posada3 from '../assets/posada 3.png';
+import posada4 from '../assets/posada 4.png';
+import posada5 from '../assets/posada 5.png';
+import posada6 from '../assets/posada 6.png';
+import posada7 from '../assets/posada 7.png';
+
+const ALL_ASSETS = [
+  videoMain,
+  videoIntro,
+  videoFiesta,
+  bgMusic,
+  bgImage,
+  lastFrame,
+  parroquiaImg,
+  posada1,
+  posada2,
+  posada3,
+  posada4,
+  posada5,
+  posada6,
+  posada7,
+];
 
 export default function Preloader({ onEnter }) {
-  const [progress, setProgress] = useState(12);
+  const [progress, setProgress] = useState(5);
   const [isReady, setIsReady] = useState(false);
   const [isExiting, setIsExiting] = useState(false);
 
   useEffect(() => {
-    let loadedCount = 0;
-    const assetsToLoad = [
-      { type: 'image', src: bgImage },
-      { type: 'image', src: lastFrame },
-      { type: 'image', src: parroquiaImg },
-      { type: 'audio', src: bgMusic },
-      { type: 'video', src: videoMain },
-      { type: 'video', src: videoIntro },
-      { type: 'video', src: videoFiesta },
-    ];
+    let completed = 0;
+    const total = ALL_ASSETS.length;
 
-    const totalAssets = assetsToLoad.length;
-
-    const updateProgress = () => {
-      loadedCount++;
-      const pct = Math.min(100, Math.round((loadedCount / totalAssets) * 90) + 10);
+    const trackProgress = () => {
+      completed++;
+      const pct = Math.min(100, Math.round((completed / total) * 100));
       setProgress(pct);
-      if (loadedCount >= totalAssets) {
+
+      if (completed >= total) {
         setTimeout(() => {
-          setProgress(100);
           setIsReady(true);
-        }, 400);
+        }, 300);
       }
     };
 
-    // Preload images
-    assetsToLoad.forEach((asset) => {
-      if (asset.type === 'image') {
-        const img = new Image();
-        img.src = asset.src;
-        img.onload = updateProgress;
-        img.onerror = updateProgress;
-      } else if (asset.type === 'audio') {
-        const aud = new Audio();
-        aud.src = asset.src;
-        aud.preload = 'auto';
-        aud.oncanplaythrough = () => {
-          updateProgress();
-          aud.oncanplaythrough = null;
-        };
-        aud.onerror = updateProgress;
-        aud.load();
-      } else if (asset.type === 'video') {
-        const vid = document.createElement('video');
-        vid.src = asset.src;
-        vid.preload = 'auto';
-        vid.oncanplaythrough = () => {
-          updateProgress();
-          vid.oncanplaythrough = null;
-        };
-        vid.onerror = updateProgress;
-        vid.load();
-      }
+    // Precargar todos los archivos binarios (videos, audio, imágenes) en la caché del navegador vía fetch
+    ALL_ASSETS.forEach((url) => {
+      fetch(url)
+        .then((response) => {
+          if (!response.ok) throw new Error('Network error');
+          return response.blob();
+        })
+        .then(() => {
+          trackProgress();
+        })
+        .catch(() => {
+          // Fallback con elementos nativos si fetch tiene alguna restricción
+          const img = new Image();
+          img.src = url;
+          img.onload = trackProgress;
+          img.onerror = trackProgress;
+        });
     });
 
-    // Fallback timer: ensure ready within 3.5s even if connection is slow
+    // Temporizador de seguridad por si alguna conexión es lenta
     const fallbackTimer = setTimeout(() => {
       setProgress(100);
       setIsReady(true);
-    }, 3800);
+    }, 6000);
 
     return () => clearTimeout(fallbackTimer);
   }, []);
@@ -80,9 +83,6 @@ export default function Preloader({ onEnter }) {
   const handleOpen = () => {
     setIsExiting(true);
     if (onEnter) onEnter();
-    setTimeout(() => {
-      // Allow unmounting or opacity transition
-    }, 800);
   };
 
   return (
@@ -114,7 +114,7 @@ export default function Preloader({ onEnter }) {
         </div>
 
         <p className="preloader-eyebrow">Con la bendición de Dios</p>
-        <h1 className="preloader-title">Bautizo y primer año </h1>
+        <h1 className="preloader-title">Bautizo y primer año</h1>
         <p className="preloader-subtitle">Gibran Maximiliano García Aguilar</p>
 
         <div className="preloader-divider">
@@ -126,7 +126,7 @@ export default function Preloader({ onEnter }) {
         {!isReady ? (
           <div className="preloader-loading-wrap">
             <p className="preloader-loading-text">
-              Preparando bendiciones y recuerdos...
+              Guardando videos y recuerdos en memoria ({progress}%)...
             </p>
             {/* Barra de progreso dorada */}
             <div className="preloader-progress-bar">
