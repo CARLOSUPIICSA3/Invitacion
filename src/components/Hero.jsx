@@ -65,7 +65,7 @@ export default function Hero({ started = true }) {
     v.play().catch(() => {
       v.muted = true;
       setIsMuted(true);
-      v.play().catch(() => {});
+      v.play().catch(() => { });
     });
   }, [videoKey, isMuted, started]);
 
@@ -354,7 +354,7 @@ export default function Hero({ started = true }) {
             <p className="hero__family-label">En compañía de:</p>
             <div className="hero__family-godmother">
               <span className="hero__family-role">Mi madrina</span>
-              <span className="hero__family-name">Josseline Hernandez Angeles</span>
+              <span className="hero__family-name">Josselin Hernandez Angeles</span>
             </div>
             <div className="hero__family-parents">
               <div className="hero__family-member">
