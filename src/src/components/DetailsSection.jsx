@@ -21,7 +21,7 @@ const DETAILS = [
     hover: 'Chilcuautla, Hidalgo · Click para más info', modal: 'church'
   },
   {
-    id: 'salon', icon: '🎉', label: 'Recepción', value: 'Salón Posada Martínez', sub: '1:00 PM – 10:00 PM',
+    id: 'salon', icon: '🎉', label: 'Recepción', value: 'Salón Posada Martínez', sub: '1:00 PM',
     hover: 'Click para ver el salón', modal: 'salon'
   },
   { icon: '👗', label: 'Vestimenta', value: 'Como te sientas comodo', sub: 'Tematica: noche mexicana' },
@@ -80,7 +80,7 @@ function SalonModal({ onClose }) {
           ))}
           <div className="salon-collage__overlay">
             <h3 className="church-modal__title">Salón Posada Martínez</h3>
-            <p className="church-modal__location">📍 Recepción · 1:00 PM – 10:00 PM</p>
+            <p className="church-modal__location">📍 Recepción · 1:00 PM</p>
           </div>
           {/* Indicadores */}
           <div className="salon-dots">

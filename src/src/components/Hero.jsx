@@ -259,7 +259,7 @@ export default function Hero() {
 
             {/* Franja inferior polaroid */}
             <div className="video-frame__caption">
-              <span className="video-frame__caption-text">Gibran · Bautizo 2026</span>
+              <span className="video-frame__caption-text">Gibran Maximiliano · Bautizo & Primer Año 2026</span>
             </div>
           </div>
         </div>
@@ -307,7 +307,7 @@ export default function Hero() {
             <p className="hero__family-label">En compañía de:</p>
             <div className="hero__family-godmother">
               <span className="hero__family-role">Mi madrina</span>
-              <span className="hero__family-name">Josseline Angeles</span>
+              <span className="hero__family-name">Josseline Hernandez Angeles</span>
             </div>
             <div className="hero__family-parents">
               <div className="hero__family-member">
@@ -317,7 +317,7 @@ export default function Hero() {
               <div className="hero__family-divider" aria-hidden="true" />
               <div className="hero__family-member">
                 <span className="hero__family-role">Mi mamá</span>
-                <span className="hero__family-name">Rocío Aguilar Angeles</span>
+                <span className="hero__family-name">Rocio Aguilar Angeles</span>
               </div>
             </div>
           </div>
