@@ -5,7 +5,7 @@ import videoFiesta from '../assets/celebracion.mp4';
 import bgImage from '../assets/background.png';
 import lastFrame from '../assets/salida.png';
 import parroquiaImg from '../assets/parroquia.png';
-import bgMusic from '../assets/musica.mp3';
+import bgMusic from '../assets/musica.aac';
 import posada1 from '../assets/posada 1.png';
 import posada2 from '../assets/posada 2.png';
 import posada3 from '../assets/posada 3.png';
@@ -52,14 +52,20 @@ export default function Preloader({ onEnter }) {
       }
     };
 
-    // Precargar todos los archivos binarios (videos, audio, imágenes) en la caché del navegador vía fetch
+    // Precargar todos los archivos binarios (videos, audio, imágenes) en memoria RAM vía Blob URLs
+    window.__ASSET_BLOBS__ = window.__ASSET_BLOBS__ || {};
+
     ALL_ASSETS.forEach((url) => {
       fetch(url)
         .then((response) => {
           if (!response.ok) throw new Error('Network error');
           return response.blob();
         })
-        .then(() => {
+        .then((blob) => {
+          try {
+            const objectUrl = URL.createObjectURL(blob);
+            window.__ASSET_BLOBS__[url] = objectUrl;
+          } catch (e) {}
           trackProgress();
         })
         .catch(() => {

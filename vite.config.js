@@ -5,8 +5,8 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   base: './',
   plugins: [react()],
-  // Treat .mov files as static assets (served by URL, not inlined)
-  assetsInclude: ['**/*.mov', '**/*.MOV', '**/*.mp4', '**/*.MP4'],
+  // Treat audio and video files as static assets (served by URL, not inlined)
+  assetsInclude: ['**/*.mov', '**/*.MOV', '**/*.mp4', '**/*.MP4', '**/*.aac', '**/*.AAC', '**/*.mp3', '**/*.MP3', '**/*.m4a'],
   build: {
     // Never inline assets as base64 (important for large video files)
     assetsInlineLimit: 0,

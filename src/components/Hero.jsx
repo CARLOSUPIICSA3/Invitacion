@@ -83,10 +83,11 @@ export default function Hero({ started = true }) {
   /* ── Handler: video terminó ── */
   const handleEnded = () => {
     if (phase === 'main') {
-      // completo.mov terminó → liberar scroll, mostrar UI
+      // completo.mp4 terminó → liberar scroll, mostrar UI
       setPhase('unlocked');
     } else if (phase === 'historia') {
-      // entrada.mp4 terminó → misma UI que completo (salida.png + botones)
+      // entrada.mp4 terminó → misma UI que completo (salida.png + botones) y reanudar música
+      window.dispatchEvent(new CustomEvent('bgmusic-resume'));
       setPhase('unlocked');
     } else if (phase === 'celebration') {
       // celebracion.mp4 terminó → flash de página completa → scroll
@@ -108,6 +109,7 @@ export default function Hero({ started = true }) {
     setShowRestart(false);
     setHideCelebra(false);
     setIsMuted(false);
+    window.dispatchEvent(new CustomEvent('bgmusic-resume'));
     setCurrentSrc(videoMain);
     setPhase('main');
     setVideoKey((k) => k + 1);
@@ -118,13 +120,15 @@ export default function Hero({ started = true }) {
   const restartVideo = () => {
     setHideCelebra(false);
     setIsMuted(false);
+    window.dispatchEvent(new CustomEvent('bgmusic-resume'));
     setCurrentSrc(videoMain);
     setPhase('main');
     setVideoKey((k) => k + 1);
   };
 
-  /* ── Reproducir "Nuestra historia" ── */
+  /* ── Reproducir "Nuestra historia" (pausa la música de fondo) ── */
   const playHistoria = () => {
+    window.dispatchEvent(new CustomEvent('bgmusic-pause'));
     setIsMuted(false);
     setCurrentSrc(videoIntro);
     setPhase('historia');
@@ -201,8 +205,8 @@ export default function Hero({ started = true }) {
                 key={videoKey}
                 ref={videoRef}
                 className="hero__video"
-                src={currentSrc}
-                poster={bgImage}
+                src={window.__ASSET_BLOBS__?.[currentSrc] || currentSrc}
+                poster={window.__ASSET_BLOBS__?.[bgImage] || bgImage}
                 muted={isMuted}
                 playsInline autoPlay preload="auto"
                 onEnded={handleEnded}

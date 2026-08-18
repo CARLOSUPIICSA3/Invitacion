@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import bgMusic from '../assets/musica.mp3';
+import bgMusic from '../assets/musica.aac';
 
 export default function MusicPlayer() {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -53,8 +53,27 @@ export default function MusicPlayer() {
     // Reintentar cuando el audio cargue sus primeros bytes
     audio.addEventListener('canplaythrough', tryPlay, { once: true });
 
+    // Escuchar eventos globales de pausa/reanudación (ej. al ver video 'entrada')
+    const onPauseEvent = () => {
+      if (audio) {
+        audio.pause();
+        setIsPlaying(false);
+      }
+    };
+
+    const onResumeEvent = () => {
+      if (audio) {
+        audio.play().then(() => setIsPlaying(true)).catch(() => {});
+      }
+    };
+
+    window.addEventListener('bgmusic-pause', onPauseEvent);
+    window.addEventListener('bgmusic-resume', onResumeEvent);
+
     return () => {
       removeListeners();
+      window.removeEventListener('bgmusic-pause', onPauseEvent);
+      window.removeEventListener('bgmusic-resume', onResumeEvent);
     };
   }, []);
 
@@ -73,11 +92,13 @@ export default function MusicPlayer() {
     }
   };
 
+  const musicSrc = window.__ASSET_BLOBS__?.[bgMusic] || bgMusic;
+
   return (
     <>
       <audio
         ref={audioRef}
-        src={bgMusic}
+        src={musicSrc}
         loop
         autoPlay
         playsInline
