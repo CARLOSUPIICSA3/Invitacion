@@ -601,6 +601,42 @@ body {
   }
 }
 
+/* ── Botón de sonido flotante ── */
+.btn-sound-toggle {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(8px);
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 15;
+  transition: all 0.25s ease;
+}
+
+.btn-sound-toggle svg {
+  width: 16px;
+  height: 16px;
+}
+
+.btn-sound-toggle:hover {
+  background: rgba(0, 0, 0, 0.7);
+  border-color: rgba(255, 255, 255, 0.8);
+  transform: scale(1.08);
+}
+
+.btn-sound-toggle--muted {
+  color: rgba(255, 255, 255, 0.6);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
 /* ── Grupo de control (historia + restart) ── */
 .btn-control-group {
   position: absolute;
@@ -951,8 +987,8 @@ body {
 
 .section-text {
   font-family: var(--font-serif);
-  font-size: 1.1rem;
-  font-weight: 300;
+  font-size: 1.4rem;
+  font-weight: 200;
   font-style: italic;
   color: var(--color-text-muted);
   line-height: 1.8;
@@ -1729,5 +1765,419 @@ body {
 
   .hero__divider-line {
     width: 50px;
+  }
+}
+
+/* ============================================================
+   PRELOADER / PÁGINA DE ESPERA ELEGANTE
+   ============================================================ */
+.preloader-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: radial-gradient(circle at 50% 35%, #183858 0%, #0c1a2c 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  overflow: hidden;
+  transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.preloader-overlay--exit {
+  opacity: 0;
+  transform: scale(1.06);
+  pointer-events: none;
+}
+
+/* Patrón de fondo tenue */
+.preloader-bg-pattern {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(201, 162, 39, 0.12) 1px, transparent 1px);
+  background-size: 32px 32px;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Partículas destellantes */
+.preloader-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.preloader-sparkle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 10px 2px rgba(255, 233, 122, 0.8);
+  opacity: 0;
+  animation: preloader-twinkle 3s ease-in-out infinite;
+}
+
+@keyframes preloader-twinkle {
+
+  0%,
+  100% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+
+  50% {
+    opacity: 0.9;
+    transform: scale(1.4);
+  }
+}
+
+/* Tarjeta central de cristal */
+.preloader-card {
+  position: relative;
+  z-index: 2;
+  max-width: 480px;
+  width: 100%;
+  text-align: center;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(201, 162, 39, 0.35);
+  border-radius: 28px;
+  padding: 3rem 2.2rem;
+  box-shadow:
+    0 25px 60px rgba(0, 0, 0, 0.55),
+    inset 0 0 40px rgba(201, 162, 39, 0.08);
+  animation: preloader-card-enter 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes preloader-card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(25px) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Emblema con halo celestial */
+.preloader-emblem {
+  position: relative;
+  width: 76px;
+  height: 76px;
+  margin: 0 auto 1.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.preloader-emblem__halo {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1.5px solid rgba(201, 162, 39, 0.6);
+  animation: preloader-halo-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes preloader-halo-pulse {
+
+  0%,
+  100% {
+    transform: scale(0.92);
+    opacity: 0.4;
+    box-shadow: 0 0 10px rgba(201, 162, 39, 0.2);
+  }
+
+  50% {
+    transform: scale(1.15);
+    opacity: 0.9;
+    box-shadow: 0 0 25px rgba(201, 162, 39, 0.6);
+  }
+}
+
+.preloader-emblem__icon {
+  font-size: 2.6rem;
+  filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.6));
+}
+
+.preloader-eyebrow {
+  font-family: var(--font-body);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--color-gold-light);
+  margin-bottom: 0.4rem;
+}
+
+.preloader-title {
+  font-family: var(--font-formal);
+  font-size: clamp(1.8rem, 4.5vw, 2.4rem);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #ffffff;
+  line-height: 1.2;
+  text-shadow: 0 3px 20px rgba(201, 162, 39, 0.45);
+}
+
+.preloader-subtitle {
+  font-family: var(--font-serif);
+  font-size: 1.15rem;
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.85);
+  margin-top: 0.3rem;
+}
+
+.preloader-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  margin: 1.2rem auto 1.6rem;
+}
+
+.preloader-divider__line {
+  width: 45px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(201, 162, 39, 0.6), transparent);
+}
+
+.preloader-divider__cross {
+  color: var(--color-gold);
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+/* Área de progreso */
+.preloader-loading-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.preloader-loading-text {
+  font-family: var(--font-serif);
+  font-size: 0.95rem;
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.preloader-progress-bar {
+  width: 100%;
+  max-width: 260px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50px;
+  overflow: hidden;
+  border: 1px solid rgba(201, 162, 39, 0.3);
+  margin: 0.2rem 0;
+}
+
+.preloader-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #c9a227 0%, #fced7e 100%);
+  border-radius: 50px;
+  transition: width 0.35s ease;
+  box-shadow: 0 0 14px rgba(201, 162, 39, 0.8);
+}
+
+.preloader-pct {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--color-gold-light);
+}
+
+/* Botón de apertura cuando termina de cargar */
+.preloader-ready-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  animation: preloader-button-reveal 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes preloader-button-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.btn-open-invitation {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.95rem 2.4rem;
+  background: linear-gradient(135deg, #c9a227 0%, #ecd066 100%);
+  color: #122842;
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow:
+    0 8px 28px rgba(201, 162, 39, 0.45),
+    0 2px 10px rgba(0, 0, 0, 0.25);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.btn-open-invitation:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow:
+    0 12px 36px rgba(201, 162, 39, 0.65),
+    0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.btn-open-invitation__glow {
+  position: absolute;
+  inset: -5px;
+  border-radius: 50px;
+  background: rgba(252, 237, 126, 0.4);
+  animation: preloader-btn-pulse 1.8s infinite;
+  z-index: -1;
+}
+
+@keyframes preloader-btn-pulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+
+  50% {
+    transform: scale(1.08);
+    opacity: 0.15;
+  }
+}
+
+.btn-open-invitation__icon {
+  font-size: 1.1rem;
+}
+
+.preloader-ready-hint {
+  font-family: var(--font-serif);
+  font-size: 0.88rem;
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* ============================================================
+   FLOATING MUSIC PLAYER (BOTÓN DE MÚSICA)
+   ============================================================ */
+.music-floating-btn {
+  position: fixed;
+  top: 1.25rem;
+  right: 1.25rem;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.95rem;
+  background: rgba(18, 40, 66, 0.82);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1.5px solid rgba(201, 162, 39, 0.55);
+  border-radius: 50px;
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.3),
+    0 0 12px rgba(201, 162, 39, 0.25);
+  transition: all 0.25s ease;
+  animation: music-btn-enter 0.8s ease backwards;
+}
+
+@keyframes music-btn-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.music-floating-btn:hover {
+  background: rgba(26, 58, 92, 0.95);
+  border-color: var(--color-gold);
+  transform: translateY(-2px) scale(1.04);
+  box-shadow:
+    0 10px 28px rgba(0, 0, 0, 0.4),
+    0 0 18px rgba(201, 162, 39, 0.45);
+}
+
+.music-floating-btn__icon {
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+}
+
+.music-floating-btn__label {
+  color: var(--color-gold-light);
+}
+
+/* Animación de ondas musicales */
+.music-floating-btn__waves {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 12px;
+}
+
+.music-wave {
+  width: 2.5px;
+  height: 3px;
+  background: var(--color-gold-light);
+  border-radius: 2px;
+  transition: height 0.2s ease;
+}
+
+.music-floating-btn--playing .music-wave--1 {
+  animation: music-wave-bounce 0.9s ease-in-out infinite alternate;
+}
+
+.music-floating-btn--playing .music-wave--2 {
+  animation: music-wave-bounce 0.9s ease-in-out 0.25s infinite alternate;
+}
+
+.music-floating-btn--playing .music-wave--3 {
+  animation: music-wave-bounce 0.9s ease-in-out 0.5s infinite alternate;
+}
+
+@keyframes music-wave-bounce {
+  0% {
+    height: 3px;
+    opacity: 0.5;
+  }
+
+  100% {
+    height: 12px;
+    opacity: 1;
   }
 }

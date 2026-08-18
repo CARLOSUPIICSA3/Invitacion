@@ -1,4 +1,6 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import Preloader from './components/Preloader';
+import MusicPlayer from './components/MusicPlayer';
 import Hero from './components/Hero';
 import VerseSection from './components/VerseSection';
 import DetailsSection from './components/DetailsSection';
@@ -28,11 +30,16 @@ function useScrollAnimations() {
 }
 
 export default function App() {
+  const [hasEntered, setHasEntered] = useState(false);
   useScrollAnimations();
 
   return (
     <div className="app">
-      <Hero />
+      {!hasEntered && (
+        <Preloader onEnter={() => setHasEntered(true)} />
+      )}
+      <MusicPlayer />
+      <Hero started={hasEntered} />
       <VerseSection />
       <DetailsSection />
       <Countdown />
@@ -41,3 +48,4 @@ export default function App() {
     </div>
   );
 }
+

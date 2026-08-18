@@ -36,7 +36,7 @@ const CONFETTI = Array.from({ length: 48 }, (_, i) => ({
   'flash'       → destello post-celebración   (scroll libre → auto-scroll)
 */
 
-export default function Hero() {
+export default function Hero({ started = true }) {
   const videoRef = useRef(null);
 
   const [phase, setPhase] = useState('main');
@@ -45,6 +45,7 @@ export default function Hero() {
   const [showFlash, setShowFlash] = useState(false);
   const [showRestart, setShowRestart] = useState(false);
   const [hideCelebra, setHideCelebra] = useState(false); // se oculta al hacer click
+  const [isMuted, setIsMuted] = useState(false); // Audio activado por defecto
 
   /* ── Bloquear / liberar scroll ── */
   const scrollLocked = phase === 'main' || phase === 'historia' || phase === 'celebration' || phase === 'flash';
@@ -54,13 +55,30 @@ export default function Hero() {
     return () => { document.documentElement.style.overflow = ''; };
   }, [scrollLocked]);
 
-  /* ── Autoplay cuando cambia el videoKey ── */
+  /* ── Autoplay del video con audio ── */
   useEffect(() => {
+    if (!started) return;
     const v = videoRef.current;
     if (!v) return;
-    v.muted = true;
-    v.play().catch(() => { });
-  }, [videoKey]);
+    v.muted = isMuted;
+    v.volume = 1.0;
+    v.play().catch(() => {
+      v.muted = true;
+      setIsMuted(true);
+      v.play().catch(() => {});
+    });
+  }, [videoKey, isMuted, started]);
+
+  /* ── Toggle de sonido manual ── */
+  const toggleAudio = (e) => {
+    e.stopPropagation();
+    const v = videoRef.current;
+    if (!v) return;
+    const nextMuted = !isMuted;
+    v.muted = nextMuted;
+    v.volume = 1.0;
+    setIsMuted(nextMuted);
+  };
 
   /* ── Handler: video terminó ── */
   const handleEnded = () => {
@@ -89,6 +107,7 @@ export default function Hero() {
   const restartAll = () => {
     setShowRestart(false);
     setHideCelebra(false);
+    setIsMuted(false);
     setCurrentSrc(videoMain);
     setPhase('main');
     setVideoKey((k) => k + 1);
@@ -98,6 +117,7 @@ export default function Hero() {
   /* ── Reiniciar el video actual ── */
   const restartVideo = () => {
     setHideCelebra(false);
+    setIsMuted(false);
     setCurrentSrc(videoMain);
     setPhase('main');
     setVideoKey((k) => k + 1);
@@ -105,6 +125,7 @@ export default function Hero() {
 
   /* ── Reproducir "Nuestra historia" ── */
   const playHistoria = () => {
+    setIsMuted(false);
     setCurrentSrc(videoIntro);
     setPhase('historia');
     setVideoKey((k) => k + 1);
@@ -113,6 +134,7 @@ export default function Hero() {
   const playCelebracion = () => {
     setShowRestart(false);
     setHideCelebra(true);   // oculta el botón al hacer click
+    setIsMuted(false);
     setCurrentSrc(videoFiesta);
     setPhase('celebration');
     setVideoKey((k) => k + 1);
@@ -121,6 +143,7 @@ export default function Hero() {
   const showLastFrame = phase === 'unlocked';
   const showConfetti = phase === 'unlocked';
   const showButtons = phase === 'unlocked';
+  const showCelebraButton = !hideCelebra && phase !== 'historia' && phase !== 'celebration';
 
   return (
     <>
@@ -180,9 +203,31 @@ export default function Hero() {
                 className="hero__video"
                 src={currentSrc}
                 poster={bgImage}
-                muted playsInline autoPlay preload="auto"
+                muted={isMuted}
+                playsInline autoPlay preload="auto"
                 onEnded={handleEnded}
               />
+
+              {/* Botón de sonido flotante */}
+              <button
+                className={`btn-sound-toggle ${isMuted ? 'btn-sound-toggle--muted' : ''}`}
+                onClick={toggleAudio}
+                title={isMuted ? 'Activar sonido' : 'Silenciar'}
+                aria-label={isMuted ? 'Activar sonido' : 'Silenciar'}
+              >
+                {isMuted ? (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <line x1="23" y1="9" x2="17" y2="15" />
+                    <line x1="17" y1="9" x2="23" y2="15" />
+                  </svg>
+                ) : (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07" />
+                  </svg>
+                )}
+              </button>
 
               {/* Último frame de completo.mov (congelado) */}
               <div
@@ -190,8 +235,6 @@ export default function Hero() {
                 style={{ backgroundImage: `url(${lastFrame})` }}
                 aria-hidden="true"
               />
-
-
 
               {/* Capa oscura sobre el video (efecto fondo de pantalla) */}
               <div className={`video-overlay ${phase === 'main' ? 'video-overlay--active' : ''}`} aria-hidden="true" />
@@ -213,8 +256,8 @@ export default function Hero() {
                 </div>
               )}
 
-              {/* Celebra con nosotros — visible siempre, se oculta al hacer click */}
-              {!hideCelebra && (
+              {/* Celebra con nosotros — visible siempre excepto en historia / celebracion */}
+              {showCelebraButton && (
                 <button
                   id="btn-celebra"
                   className={`btn-celebrate ${showButtons ? 'btn-celebrate--active' : 'btn-celebrate--dim'}`}
